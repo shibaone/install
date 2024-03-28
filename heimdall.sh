@@ -24,7 +24,7 @@ require_util() {
 
 version="0.3.0"
 newCLIVersion="0.3.0"
-network="mainnet"
+network="shibmainnet"
 nodetype="sentry"
 
 # Help function -h
@@ -58,10 +58,10 @@ if [ ! -z "$1" ]; then
 fi
 
 if [ ! -z "$2" ]; then
-    if [ "$2" = "mainnet" ] || [ "$2" = "mumbai" ] || [ "$2" = "amoy" ]; then
+    if [ "$2" = "shibmainnet" ] || [ "$2" = "sepoliapuppynet" ]; then
         network="$2"
     else
-        echo "Invalid network: $2, choose from 'mainnet' or 'mumbai' or 'amoy'"
+        echo "Invalid network: $2, choose from 'shibmainnet' or 'sepoliapuppynet'"
         exit 1
     fi
 fi
@@ -87,7 +87,7 @@ else
     tag=${version}
 fi
 
-baseUrl="https://github.com/maticnetwork/heimdall/releases/download/v${version}"
+baseUrl="https://github.com/shibaone/heimdall/releases/download/v${version}"
 
 echo $baseUrl
 
@@ -210,7 +210,7 @@ elif [ $type = "deb" ]; then
     sudo dpkg -r heimdalld
     echo "Installing $package ..."
     sudo dpkg -i $package
-    if [ ! -z "$profilePackage" ] && sudo [ ! -d /var/lib/heimdall/config ]; then
+    if [ ! -z "$profilePackage" ] && sudo [ ! -d /data/heimdall/config ]; then
         sudo dpkg -i $profilePackage
     fi
 elif [ $type = "rpm" ]; then
@@ -218,7 +218,7 @@ elif [ $type = "rpm" ]; then
     sudo rpm -e heimdall
     echo "Installing $package ..."
     sudo rpm -i --force $package
-    if [ ! -z "$profilePackage" ] && sudo [ ! -d /var/lib/heimdall/config ]; then
+    if [ ! -z "$profilePackage" ] && sudo [ ! -d /data/heimdall/config ]; then
         sudo rpm -i --force $profilePackage
     fi
 elif [ $type = "apk" ]; then
