@@ -23,7 +23,7 @@ require_util() {
 }
 
 version="0.3.0"
-network="shibmainnet"
+network="shibarium"
 nodetype="sentry"
 
 
@@ -57,10 +57,10 @@ if [ ! -z "$1" ]; then
 fi
 
 if [ ! -z "$2" ]; then
-    if [ "$2" = "shibmainnet" ] || [ "$2" = "sepoliapuppynet" ]; then
+    if [ "$2" = "shibarium" ] || [ "$2" = "puppynet" ]; then
         network="$2"
     else
-        echo "Invalid network: $2, choose from 'shibmainnet' or 'sepoliapuppynet'"
+        echo "Invalid network: $2, choose from 'shibarium' or 'puppynet'"
         exit 1
     fi
 fi
