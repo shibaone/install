@@ -195,7 +195,7 @@ if [ $type = "tar.gz" ]; then
     unpack=$tmpDir/unpack
     mkdir -p "$unpack"
     tar -xzf "$package" -C "$unpack" || oops "failed to unpack '$package'"
-    sudo cp "${unpack}/bor" /usr/local/bin/bor || oops "failed to copy bor binary to '/usr/local/bin/bor'"
+    sudo cp "${unpack}/bor" /usr/bin/bor || oops "failed to copy bor binary to '/usr/bin/bor'"
 elif [ $type = "deb" ]; then
     echo "Uninstalling any existing old binary ..."
     sudo dpkg -r bor
