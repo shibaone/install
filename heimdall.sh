@@ -200,10 +200,10 @@ if [ $type = "tar.gz" ]; then
     unpack=$tmpDir/unpack
     mkdir -p "$unpack"
     tar -xzf "$package" -C "$unpack" || oops "failed to unpack '$package'"
-    sudo cp "${unpack}/heimdalld" /usr/local/bin/heimdalld || oops "failed to copy heimdalld binary to '/usr/local/bin/heimdalld'"
-    sudo cp "${unpack}/heimdallcli" /usr/local/bin/heimdallcli || oops "failed to copy heimdallcli binary to '/usr/local/bin/heimdallcli'"
+    sudo cp "${unpack}/heimdalld" /usr/bin/heimdalld || oops "failed to copy heimdalld binary to '/usr/bin/heimdalld'"
+    sudo cp "${unpack}/heimdallcli" /usr/bin/heimdallcli || oops "failed to copy heimdallcli binary to '/usr/bin/heimdallcli'"
     if [ "$version" \< "$newCLIVersion" ]; then
-        sudo cp "${unpack}/bridge" /usr/local/bin/bridge || oops "failed to copy bridge binary to '/usr/local/bin/bridge'"
+        sudo cp "${unpack}/bridge" /usr/bin/bridge || oops "failed to copy bridge binary to '/usr/bin/bridge'"
     fi
 elif [ $type = "deb" ]; then
     echo "Uninstalling any existing old binary ..."
