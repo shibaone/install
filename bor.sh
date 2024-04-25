@@ -23,7 +23,7 @@ require_util() {
 }
 
 version="0.3.0"
-network="mainnet"
+network="shibarium"
 nodetype="sentry"
 
 
@@ -57,10 +57,10 @@ if [ ! -z "$1" ]; then
 fi
 
 if [ ! -z "$2" ]; then
-    if [ "$2" = "mainnet" ] || [ "$2" = "mumbai" ] || [ "$2" = "amoy" ]; then
+    if [ "$2" = "shibarium" ] || [ "$2" = "puppynet" ]; then
         network="$2"
     else
-        echo "Invalid network: $2, choose from 'mainnet' or 'mumbai' or 'amoy'"
+        echo "Invalid network: $2, choose from 'shibarium' or 'puppynet'"
         exit 1
     fi
 fi
@@ -82,7 +82,7 @@ else
     tag=${version}
 fi
 
-baseUrl="https://github.com/maticnetwork/bor/releases/download/v${version}"
+baseUrl="https://github.com/shibaone/bor/releases/download/v${version}"
 
 echo $baseUrl
 
@@ -195,7 +195,7 @@ if [ $type = "tar.gz" ]; then
     unpack=$tmpDir/unpack
     mkdir -p "$unpack"
     tar -xzf "$package" -C "$unpack" || oops "failed to unpack '$package'"
-    sudo cp "${unpack}/bor" /usr/local/bin/bor || oops "failed to copy bor binary to '/usr/local/bin/bor'"
+    sudo cp "${unpack}/bor" /usr/bin/bor || oops "failed to copy bor binary to '/usr/bin/bor'"
 elif [ $type = "deb" ]; then
     echo "Uninstalling any existing old binary ..."
     sudo dpkg -r bor

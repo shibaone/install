@@ -24,7 +24,7 @@ require_util() {
 
 version="0.3.0"
 newCLIVersion="0.3.0"
-network="mainnet"
+network="shibarium"
 nodetype="sentry"
 
 # Help function -h
@@ -58,10 +58,10 @@ if [ ! -z "$1" ]; then
 fi
 
 if [ ! -z "$2" ]; then
-    if [ "$2" = "mainnet" ] || [ "$2" = "mumbai" ] || [ "$2" = "amoy" ]; then
+    if [ "$2" = "shibarium" ] || [ "$2" = "puppynet" ]; then
         network="$2"
     else
-        echo "Invalid network: $2, choose from 'mainnet' or 'mumbai' or 'amoy'"
+        echo "Invalid network: $2, choose from 'shibarium' or 'puppynet'"
         exit 1
     fi
 fi
@@ -87,7 +87,7 @@ else
     tag=${version}
 fi
 
-baseUrl="https://github.com/maticnetwork/heimdall/releases/download/v${version}"
+baseUrl="https://github.com/shibaone/heimdall/releases/download/v${version}"
 
 echo $baseUrl
 
@@ -200,10 +200,10 @@ if [ $type = "tar.gz" ]; then
     unpack=$tmpDir/unpack
     mkdir -p "$unpack"
     tar -xzf "$package" -C "$unpack" || oops "failed to unpack '$package'"
-    sudo cp "${unpack}/heimdalld" /usr/local/bin/heimdalld || oops "failed to copy heimdalld binary to '/usr/local/bin/heimdalld'"
-    sudo cp "${unpack}/heimdallcli" /usr/local/bin/heimdallcli || oops "failed to copy heimdallcli binary to '/usr/local/bin/heimdallcli'"
+    sudo cp "${unpack}/heimdalld" /usr/bin/heimdalld || oops "failed to copy heimdalld binary to '/usr/bin/heimdalld'"
+    sudo cp "${unpack}/heimdallcli" /usr/bin/heimdallcli || oops "failed to copy heimdallcli binary to '/usr/bin/heimdallcli'"
     if [ "$version" \< "$newCLIVersion" ]; then
-        sudo cp "${unpack}/bridge" /usr/local/bin/bridge || oops "failed to copy bridge binary to '/usr/local/bin/bridge'"
+        sudo cp "${unpack}/bridge" /usr/bin/bridge || oops "failed to copy bridge binary to '/usr/bin/bridge'"
     fi
 elif [ $type = "deb" ]; then
     echo "Uninstalling any existing old binary ..."
