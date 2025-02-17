@@ -88,7 +88,7 @@ else
     tag=${version}
 fi
 
-baseUrl="https://github.com/maticnetwork/heimdall/releases/download/v${version}"
+baseUrl="https://github.com/shibaone/heimdall/releases/download/v${version}"
 
 echo $baseUrl
 
