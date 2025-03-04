@@ -196,6 +196,8 @@ if [ ! -z "$profile"  ] && [[ "$version" > "0.3" ]]; then
     fetch "$profileUrl" "$profilePackage" || oops "failed to download '$profileUrl'"
 fi
 
+echo $type
+
 if [ $type = "tar.gz" ]; then
     require_util tar "unpack the binary package"
     unpack=$tmpDir/unpack
