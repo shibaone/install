@@ -96,6 +96,7 @@ echo $baseUrl
 case "$(uname -s).$(uname -m)" in
     Linux.x86_64)
         if command -v dpkg &> /dev/null; then
+            echo "99";
             type="deb"
             if [[ $version > "0.3" ]]; then
                 binary="heimdall-v${tag}-amd64.deb"
@@ -104,6 +105,7 @@ case "$(uname -s).$(uname -m)" in
                 binary="heimdall_v${tag}_linux_amd64.deb"
             fi
         elif command -v rpm &> /dev/null; then
+        echo "108";
             type="rpm"
             if [[ $version > "0.3" ]]; then
                 binary="heimdall-v${tag}.x86_64.rpm"
@@ -112,6 +114,7 @@ case "$(uname -s).$(uname -m)" in
                 binary="heimdall_v${tag}_linux_amd64.rpm"
             fi
         elif command -v apk &> /dev/null; then
+        echo "117";
             if [[ $version > "0.3" ]]; then
                 oops "sorry, there is no binary distribution for your platform"
             fi
@@ -127,6 +130,7 @@ case "$(uname -s).$(uname -m)" in
         ;;
     Linux.aarch64)
         if command -v dpkg &> /dev/null; then
+        echo "133";
             type="deb"
             if [[ $version > "0.3" ]]; then
                 binary="heimdall-v${tag}-arm64.deb"
@@ -135,6 +139,7 @@ case "$(uname -s).$(uname -m)" in
                 binary="heimdall_v${tag}_linux_arm64.deb"
             fi
         elif command -v rpm &> /dev/null; then
+           echo "142";
             type="rpm"
             if [[ $version > "0.3" ]]; then
                 binary="heimdall-v${tag}.aarch64.rpm"
@@ -143,12 +148,14 @@ case "$(uname -s).$(uname -m)" in
                 binary="heimdall_v${tag}_linux_arm64.rpm"
             fi
         elif command -v apk &> /dev/null; then
+            echo "151";
             if [[ $version > "0.3" ]]; then
                 oops "sorry, there is no binary distribution for your platform"
             fi
             type="apk"
             binary="heimdall_v${tag}_linux_arm64.apk"
         else
+            echo "157";
             if [[ $version > "0.3" ]]; then
                 oops "sorry, there is no binary distribution for your platform"
             fi
@@ -196,8 +203,6 @@ if [ ! -z "$profile"  ] && [[ "$version" > "0.3" ]]; then
     echo "downloading heimdall profile package for $system from '$profileUrl' to '$tmpDir'..."
     fetch "$profileUrl" "$profilePackage" || oops "failed to download '$profileUrl'"
 fi
-
-echo "200"
 
 if [ $type = "tar.gz" ]; then
     require_util tar "unpack the binary package"
