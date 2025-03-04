@@ -22,8 +22,8 @@ require_util() {
         oops "you do not have '$1' installed, which I need to $2"
 }
 
-version="0.3.0"
-newCLIVersion="0.3.0"
+version="1.0.10"
+newCLIVersion="1.0.10"
 network="shibarium"
 nodetype="sentry"
 
@@ -82,6 +82,7 @@ fi
 if [[ $version > "0.3" ]]; then
     tag=${version}
     profileInfo=${network}-${nodetype}-config_v${version}
+    profileInforpm=${network}-${nodetype}-config-v${version}
 else
     echo "Version is less than 0.3, ignoring network and node type"
     tag=${version}
@@ -96,18 +97,18 @@ case "$(uname -s).$(uname -m)" in
         if command -v dpkg &> /dev/null; then
             type="deb"
             if [[ $version > "0.3" ]]; then
-                binary="heimdalld-v${tag}-amd64.deb"
-                profile="heimdalld-${profileInfo}-amd64.deb"
+                binary="heimdall-v${tag}-amd64.deb"
+                profile="heimdall-${profileInfo}-all.deb"
             else
-                binary="heimdalld_v${tag}_linux_amd64.deb"
+                binary="heimdall_v${tag}_linux_amd64.deb"
             fi
         elif command -v rpm &> /dev/null; then
             type="rpm"
             if [[ $version > "0.3" ]]; then
-                binary="heimdalld-v${tag}-amd64.rpm"
-                profile="heimdalld-${profileInfo}-amd64.rpm"
+                binary="heimdall-v${tag}.x86_64.rpm"
+                profile="heimdall-${profileInforpm}.noarch.rpm"
             else
-                binary="heimdalld_v${tag}_linux_amd64.rpm"
+                binary="heimdall_v${tag}_linux_amd64.rpm"
             fi
         elif command -v apk &> /dev/null; then
             if [[ $version > "0.3" ]]; then
@@ -127,25 +128,25 @@ case "$(uname -s).$(uname -m)" in
         if command -v dpkg &> /dev/null; then
             type="deb"
             if [[ $version > "0.3" ]]; then
-                binary="heimdalld-v${tag}-arm64.deb"
-                profile="heimdalld-${profileInfo}-arm64.deb"
+                binary="heimdall-v${tag}-arm64.deb"
+                profile="heimdall-${profileInfo}-all.deb"
             else
-                binary="heimdalld_v${tag}_linux_arm64.deb"
+                binary="heimdall_v${tag}_linux_arm64.deb"
             fi
         elif command -v rpm &> /dev/null; then
             type="rpm"
             if [[ $version > "0.3" ]]; then
-                binary="heimdalld-v${tag}-arm64.rpm"
-                profile="heimdalld-${profileInfo}-arm64.rpm"
+                binary="heimdall-v${tag}.aarch64.rpm"
+                profile="heimdall-${profileInforpm}.noarch.rpm"
             else
-                binary="heimdalld_v${tag}_linux_arm64.rpm"
+                binary="heimdall_v${tag}_linux_arm64.rpm"
             fi
         elif command -v apk &> /dev/null; then
             if [[ $version > "0.3" ]]; then
                 oops "sorry, there is no binary distribution for your platform"
             fi
             type="apk"
-            binary="heimdalld_v${tag}_linux_arm64.apk"
+            binary="heimdall_v${tag}_linux_arm64.apk"
         else
             if [[ $version > "0.3" ]]; then
                 oops "sorry, there is no binary distribution for your platform"
@@ -196,6 +197,7 @@ if [ ! -z "$profile"  ] && [[ "$version" > "0.3" ]]; then
 fi
 
 if [ $type = "tar.gz" ]; then
+echo "200";
     require_util tar "unpack the binary package"
     unpack=$tmpDir/unpack
     mkdir -p "$unpack"
@@ -203,10 +205,12 @@ if [ $type = "tar.gz" ]; then
     sudo cp "${unpack}/heimdalld" /usr/bin/heimdalld || oops "failed to copy heimdalld binary to '/usr/bin/heimdalld'"
     sudo cp "${unpack}/heimdallcli" /usr/bin/heimdallcli || oops "failed to copy heimdallcli binary to '/usr/bin/heimdallcli'"
     if [ "$version" \< "$newCLIVersion" ]; then
-        sudo cp "${unpack}/bridge" /usr/bin/bridge || oops "failed to copy bridge binary to '/usr/bin/bridge'"
+        sudo cp "${unpack}/bridge" /usr//bin/bridge || oops "failed to copy bridge binary to '/usr//bin/bridge'"
     fi
 elif [ $type = "deb" ]; then
+echo "211";
     echo "Uninstalling any existing old binary ..."
+    sudo dpkg -r heimdall
     sudo dpkg -r heimdalld
     echo "Installing $package ..."
     sudo dpkg -i $package
@@ -214,6 +218,7 @@ elif [ $type = "deb" ]; then
         sudo dpkg -i $profilePackage
     fi
 elif [ $type = "rpm" ]; then
+echo "221";
     echo "Uninstalling any existing old binary ..."
     sudo rpm -e heimdall
     echo "Installing $package ..."
