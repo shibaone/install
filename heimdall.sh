@@ -22,6 +22,7 @@ require_util() {
         oops "you do not have '$1' installed, which I need to $2"
 }
 
+
 version="1.0.10"
 newCLIVersion="1.0.10"
 network="shibarium"
