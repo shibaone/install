@@ -22,8 +22,8 @@ require_util() {
         oops "you do not have '$1' installed, which I need to $2"
 }
 
-version="1.0.10"
-newCLIVersion="1.0.10"
+version="0.3.0"
+newCLIVersion="0.3.0"
 network="shibarium"
 nodetype="sentry"
 
@@ -184,7 +184,7 @@ else
     oops "you don't have wget or curl installed, which I need to download the binary package"
 fi
 
-echo "downloading heimdall binary package for $system $type from '$url' to '$tmpDir'..."
+echo "downloading heimdall binary package for $system from '$url' to '$tmpDir'..."
 fetch "$url" "$package" || oops "failed to download '$url'"
 
 # Check if profile is not empty
