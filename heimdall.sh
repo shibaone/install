@@ -172,9 +172,6 @@ case "$(uname -s).$(uname -m)" in
     *) oops "sorry, there is no binary distribution for your platform";;
 esac
 
-echo $type;
-echo "176";
-
 url="${baseUrl}/${binary}"
 
 package=$tmpDir/$binary
@@ -200,6 +197,7 @@ if [ ! -z "$profile"  ] && [[ "$version" > "0.3" ]]; then
 fi
 
 if [ $type = "tar.gz" ]; then
+echo "200";
     require_util tar "unpack the binary package"
     unpack=$tmpDir/unpack
     mkdir -p "$unpack"
@@ -210,6 +208,7 @@ if [ $type = "tar.gz" ]; then
         sudo cp "${unpack}/bridge" /usr//bin/bridge || oops "failed to copy bridge binary to '/usr//bin/bridge'"
     fi
 elif [ $type = "deb" ]; then
+echo "211";
     echo "Uninstalling any existing old binary ..."
     sudo dpkg -r heimdall
     sudo dpkg -r heimdalld
@@ -219,6 +218,7 @@ elif [ $type = "deb" ]; then
         sudo dpkg -i $profilePackage
     fi
 elif [ $type = "rpm" ]; then
+echo "221";
     echo "Uninstalling any existing old binary ..."
     sudo rpm -e heimdall
     echo "Installing $package ..."
