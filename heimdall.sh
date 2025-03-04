@@ -186,16 +186,8 @@ url="${baseUrl}/${binary}"
 
 package=$tmpDir/$binary
 
-if command -v curl > /dev/null 2>&1; then
-    fetch() { curl -L "$1" -o "$2"; }
-elif command -v wget > /dev/null 2>&1; then
-    fetch() { wget "$1" -O "$2"; }
-else
-    oops "you don't have wget or curl installed, which I need to download the binary package"
-fi
-
 echo "Downloading heimdall binary package from '$url' to '$tmpDir'..."
-fetch "$url" "$package" || oops "failed to download '$url'"
+curl -L "$url" -o "$package" || oops "failed to download '$url'"
 
 # Check if profile is not empty
 if [ ! -z "$profile"  ] && [[ "$version" > "0.3" ]]; then
@@ -203,7 +195,7 @@ if [ ! -z "$profile"  ] && [[ "$version" > "0.3" ]]; then
     profilePackage=$tmpDir/$profile
 
     echo "Downloading heimdall profile package from '$profileUrl' to '$tmpDir'..."
-    fetch "$profileUrl" "$profilePackage" || oops "failed to download '$profileUrl'"
+    curl -L "$profileUrl" -o "$profilePackage" || oops "failed to download '$profileUrl'"
 fi
 
 if [ $type = "tar.gz" ]; then
@@ -251,5 +243,3 @@ echo "Checking heimdalld version ..."
 /usr/bin/heimdalld version || oops "something went wrong"
 
 echo "heimdall has been installed successfully!"
-
-} # End of wrapping
