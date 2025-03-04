@@ -184,7 +184,7 @@ else
     oops "you don't have wget or curl installed, which I need to download the binary package"
 fi
 
-echo "downloading heimdall binary package for $system from '$url' to '$tmpDir'..."
+echo "downloading heimdall binary package for $system $type from '$url' to '$tmpDir'..."
 fetch "$url" "$package" || oops "failed to download '$url'"
 
 # Check if profile is not empty
@@ -195,8 +195,6 @@ if [ ! -z "$profile"  ] && [[ "$version" > "0.3" ]]; then
     echo "downloading heimdall profile package for $system from '$profileUrl' to '$tmpDir'..."
     fetch "$profileUrl" "$profilePackage" || oops "failed to download '$profileUrl'"
 fi
-
-echo $type
 
 if [ $type = "tar.gz" ]; then
     require_util tar "unpack the binary package"
