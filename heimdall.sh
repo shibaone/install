@@ -55,11 +55,13 @@ if [ ! -z "$1" ]; then
     if [ "${version:0:1}" = "v" ]; then
         version=${version:1}
     fi
+    echo "Version set to $version"
 fi
 
 if [ ! -z "$2" ]; then
     if [ "$2" = "shibarium" ] || [ "$2" = "puppynet" ]; then
         network="$2"
+        echo "Network set to $network"
     else
         echo "Invalid network: $2, choose from 'shibarium' or 'puppynet'"
         exit 1
@@ -69,6 +71,7 @@ fi
 if [ ! -z "$3" ]; then
     if [ "$3" = "sentry" ] || [ "$3" = "validator" ]; then
         nodetype="$3"
+        echo "Node type set to $nodetype"
     elif [ "$3" = "archive" ]; then
         echo "No option of archive node type in heimdall. Using default mode: $nodetype"
     elif [ "$3" = "bootnode" ]; then
@@ -83,6 +86,7 @@ if [[ $version > "0.3" ]]; then
     tag=${version}
     profileInfo=${network}-${nodetype}-config_v${version}
     profileInforpm=${network}-${nodetype}-config-v${version}
+    echo "Version greater than 0.3, using tag $tag and profile $profileInfo"
 else
     echo "Version is less than 0.3, ignoring network and node type"
     tag=${version}
@@ -90,10 +94,11 @@ fi
 
 baseUrl="https://github.com/shibaone/heimdall/releases/download/v${version}"
 
-echo $baseUrl
+echo "Base URL: $baseUrl"
 
 case "$(uname -s).$(uname -m)" in
     Linux.x86_64)
+        echo "Detected Linux x86_64 architecture"
         if command -v dpkg &> /dev/null; then
             type="deb"
             if [[ $version > "0.3" ]]; then
@@ -125,6 +130,7 @@ case "$(uname -s).$(uname -m)" in
         fi
         ;;
     Linux.aarch64)
+        echo "Detected Linux aarch64 architecture"
         if command -v dpkg &> /dev/null; then
             type="deb"
             if [[ $version > "0.3" ]]; then
@@ -156,20 +162,24 @@ case "$(uname -s).$(uname -m)" in
         fi
         ;;
     Darwin.x86_64)
+        echo "Detected Darwin x86_64 architecture"
         if [[ $version > "0.3" ]]; then
-                oops "sorry, there is no binary distribution for your platform"
-            fi
+            oops "sorry, there is no binary distribution for your platform"
+        fi
         type="tar.gz"
         binary="heimdalld_v${tag}_darwin_amd64.tar.gz"
         ;;
     Darwin.arm64|Darwin.aarch64)
+        echo "Detected Darwin arm64/aarch64 architecture"
         if [[ $version > "0.3" ]]; then
-                oops "sorry, there is no binary distribution for your platform"
-            fi
+            oops "sorry, there is no binary distribution for your platform"
+        fi
         type="tar.gz"
         binary="heimdalld_v${tag}_darwin_arm64.tar.gz"
         ;;
-    *) oops "sorry, there is no binary distribution for your platform";;
+    *)
+        oops "sorry, there is no binary distribution for your platform"
+        ;;
 esac
 
 url="${baseUrl}/${binary}"
@@ -184,7 +194,7 @@ else
     oops "you don't have wget or curl installed, which I need to download the binary package"
 fi
 
-echo "downloading heimdall binary package for $system from '$url' to '$tmpDir'..."
+echo "Downloading heimdall binary package from '$url' to '$tmpDir'..."
 fetch "$url" "$package" || oops "failed to download '$url'"
 
 # Check if profile is not empty
@@ -192,21 +202,23 @@ if [ ! -z "$profile"  ] && [[ "$version" > "0.3" ]]; then
     profileUrl="${baseUrl}/${profile}"
     profilePackage=$tmpDir/$profile
 
-    echo "downloading heimdall profile package for $system from '$profileUrl' to '$tmpDir'..."
+    echo "Downloading heimdall profile package from '$profileUrl' to '$tmpDir'..."
     fetch "$profileUrl" "$profilePackage" || oops "failed to download '$profileUrl'"
 fi
 
 if [ $type = "tar.gz" ]; then
+    echo "Unpacking tar.gz package"
     require_util tar "unpack the binary package"
     unpack=$tmpDir/unpack
     mkdir -p "$unpack"
     tar -xzf "$package" -C "$unpack" || oops "failed to unpack '$package'"
     sudo cp "${unpack}/heimdalld" /usr/bin/heimdalld || oops "failed to copy heimdalld binary to '/usr/bin/heimdalld'"
-    sudo cp "${unpack}/heimdallcli" /usr/bin/heimdallcli || oops "failed to copy heimdallcli binary to '/usr/bin/heimdallcli'"
+    sudo cp "${unpack}/heimdallcli" /usr/bin/heimdallcli || oops "failed to copy heimdallcli binary to '/usr/bin/heimdalldcli'"
     if [ "$version" \< "$newCLIVersion" ]; then
         sudo cp "${unpack}/bridge" /usr/bin/bridge || oops "failed to copy bridge binary to '/usr/bin/bridge'"
     fi
 elif [ $type = "deb" ]; then
+    echo "Installing .deb package"
     echo "Uninstalling any existing old binary ..."
     sudo dpkg -r heimdall
     sudo dpkg -r heimdalld
@@ -216,6 +228,7 @@ elif [ $type = "deb" ]; then
         sudo dpkg -i $profilePackage
     fi
 elif [ $type = "rpm" ]; then
+    echo "Installing .rpm package"
     echo "Uninstalling any existing old binary ..."
     sudo rpm -e heimdall
     echo "Installing $package ..."
@@ -224,6 +237,7 @@ elif [ $type = "rpm" ]; then
         sudo rpm -i --force $profilePackage
     fi
 elif [ $type = "apk" ]; then
+    echo "Installing .apk package"
     echo "Installing $package ..."
     sudo apk add --allow-untrusted $package
 fi
@@ -232,6 +246,7 @@ if [ "$version" \< "$newCLIVersion" ]; then
     echo "Checking bridge version ..."
     bridge version || oops "something went wrong"
 fi
+
 echo "Checking heimdalld version ..."
 /usr/bin/heimdalld version || oops "something went wrong"
 
